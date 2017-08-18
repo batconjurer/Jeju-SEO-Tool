@@ -1,17 +1,21 @@
-var hlt_lock=false;
-var init_sty='textarea {margin: 0; border-radius: 0; }\
+
+
+$(document).ready(function(){
+        
+    var hlt_lock=false;
+    var init_sty='textarea {margin: 0; border-radius: 0; }\
     .backdrop{overflow: auto;}\
     .highlights{white-space:pre-wrap; word-wrap: break-word;}\
      textarea{#444; background-color:transparent;}\
      .highlights{color:transparent;}\
      mark {color:transparent; background-color:#FFFF00}\
      .backdrop{background-color:#fff}';
-
-$(document).ready($("#srch_txt").on({
+        
+        $("#srch_txt").on({
         'input':handleInput,
         'scroll':handleScroll
-    })
-    );
+        });
+    
     
     function handleInput(){
         var text=document.getElementById('srch_txt').value;
@@ -25,9 +29,9 @@ $(document).ready($("#srch_txt").on({
                 .replace(/[A-Z].*?\b/g,'<mark>$&</mark>');
     }
     
-    function handlScroll(){
-        var scrollTop= document.getElementById('srch_txt').scrollTop();
-        $backdrop.scrollTop(scrollTop);
+    function handleScroll(){
+        var scrollTop= document.getElementById('srch_txt').scrollTop;
+        $(backdrop).scrollTop(scrollTop);
     }
     
     function reset_forms(){
@@ -215,4 +219,4 @@ $(document).ready($("#srch_txt").on({
             butt.style.color="black";
         }
     }
-    
+    });
