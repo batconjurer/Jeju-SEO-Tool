@@ -10,19 +10,9 @@
     </style>
     <script>
     var hlt_lock=false;
-    var init_sty='textarea {margin: 0; border-radius: 0; }\
-    .backdrop{overflow: auto;}\
-    .highlights{white-space:pre-wrap; word-wrap: break-word;}\
-     textarea{#444; background-color:transparent;}\
-     .highlights{color:transparent;}\
-     mark {color:transparent; background-color:#FFFF00}\
-     .backdrop{background-color:#fff}';
     
-    $(document).ready($("#srch_txt").on({
-        'input':handleInput,
-        'scroll':handleScroll
-    })
-    );
+    
+    
     
     function handleInput(){
         var text=document.getElementById('srch_txt').value;
@@ -30,11 +20,6 @@
         $highlights.html(highlightedText);
     }
     
-    function applyHighlights(text){
-        return text
-                .replace(/\n$/g,'\n\n')
-                .replace(/[A-Z].*?\b/g,'<mark>$&</mark>');
-    }
     
     function handlScroll(){
         var scrollTop= document.getElementById('srch_txt').scrollTop();
@@ -166,7 +151,7 @@
     
     function unhghlght(txt){
         var re=new RegExp('<span style="background-color: #FFFF00">',"g");
-        var re2=new RegExp('<span style="background-color: #FFFF00">',"g");
+        var re2=new RegExp('</span>',"g");
         txt=txt.replace(re,'');
         txt=txt.replace(re2,'');
         document.getElementById('entered_txt').innerHTML=txt;
@@ -245,13 +230,9 @@
                 <td><h2 id="txt_header"></h2>
             <p id="txt_err"></p>
             <p id="entered_txt" style="width:1000px"></p>
-            <div class="container">
-                <div class="backdrop">
-                    <div class="highlights">
-                        
-                    </div></div>
+     
             <textarea id='srch_txt' style="width:1000px; height:500px;" required></textarea>
-                </div>
+            
             <button id="submit_button" onclick="process_form()"> Submit </button></td>
                 <td valign="top">
                     
