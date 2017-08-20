@@ -63,6 +63,13 @@
         for(i=0; i<kwds.length; i++){
             kwds[i]=$('<div>').text(kwds[i]).html();
         }
+        if (kwds.length>20){
+          document.getElementById('key_vals').innerHTML=
+                  'You have entered more than 20 search terms. Using only the'
+          +'first 20.';
+        }
+        kwds=kwds.slice(0,20);
+        
         var safe_txt=$('<div>').text(srch_txt).html();
         
         document.getElementById('srch_txt').style.visibility='hidden';
@@ -83,12 +90,7 @@
                     prepare_string(kwds[i],i,srch_txt);
                     document.getElementById(kwds[i]).style.color="black";
         }
-        /*for (i=0; i<kwds.lenght;i++){
-            document.getElementById(kwds[i].toString).onclick="highlight(this.id)";
-        }*/    
-        
-        
-        
+                 
     }
     
     String.prototype.regexIndexOf = function(regex, startpos) {
