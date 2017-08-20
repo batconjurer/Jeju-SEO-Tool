@@ -9,13 +9,12 @@
     <style id="the_sty">
     </style>
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
-    <script>
-            
+    <script> 
     var hlt_lock=false;
     var init_sty='';
+  
     
-    
-    
+   
     function reset_forms(){
         if ( confirm('This will reset all forms and delete all text.') ){
         document.getElementById('key_vals').innerHTML='';
@@ -51,7 +50,8 @@
         
     }
     
-    $(document).ready(function(){
+
+        
     function process_form(txt){
         var inpObj=document.getElementById('keywords_form');
         var inpTxt= document.getElementById('srch_txt');
@@ -72,7 +72,10 @@
     
     function do_search(kwds,srch_txt){
         var kwds=kwds.split(/\r?\n/);
-        
+        for(i=0; i<kwds.length; i++){
+            kwds[i]=$('<div>').text(kwds[i]).html();
+        }
+        var safe_txt=$('<div>').text(srch_txt).html();
         
         document.getElementById('srch_txt').style.visibility='hidden';
         document.getElementById('reset_button').style.visibility='visible';
@@ -80,7 +83,7 @@
         document.getElementById('update_txt_button').style.visibility='visible';
         document.getElementById('submit_button').style.visibility='hidden';
         document.getElementById('txt_header').innerHTML='Entered text.';
-        document.getElementById('entered_txt').innerHTML+='<div style="white-space: pre-wrap;">'+srch_txt+'</div>';
+        document.getElementById('entered_txt').innerHTML+='<div style="white-space: pre-wrap;">'+safe_txt+'</div>';
         
         document.getElementById('the_sty').innerHTML=
                 'table,th, td {border: 1px solid black;}';
@@ -204,9 +207,8 @@
             butt.style.color="black";
         }
     }
-    
-    });
-</script>
+
+    </script>
     <body onload="update_forms()">
         <h1>SEO Keyword Tool</h1>
           
