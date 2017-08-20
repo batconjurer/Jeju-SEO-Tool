@@ -6,62 +6,34 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-    <style id="the_sty">
-    </style>
-    <script>
-        var init_sty='textarea {margin: 0; border-radius: 0; }\
-    .backdrop{overflow: auto;}\
-    .highlights{white-space:pre-wrap; word-wrap: break-word;}\
-     textarea{#444; background-color:transparent;}\
-     .highlights{color:transparent;}\
-     mark {color:transparent; background-color:#FFFF00}\
-     .backdrop{background-color:#fff}';
-    
-        function update_forms(){
-        document.getElementById('key_vals').innerHTML='';
-        document.getElementById('txt_err').innerHTML='';
-        document.getElementById('the_table').innerHTML='';
-        document.getElementById('entered_txt').innerHTML='';
-        document.getElementById('srch_txt').style.visibility='visible';
-        document.getElementById('txt_header').innerHTML='Enter text to be '
-         +'searched below.';
-        document.getElementById('reset_button').style.visibility='hidden';
-        document.getElementById('update_button').style.visibility='hidden';
-        document.getElementById('update_txt_button').style.visibility='hidden';
-        document.getElementById('submit_button').style.visibility='visible';
-        document.getElementById('the_sty').innerHTML=init_sty;
-        
-    }
-    </script>
-    
-    
-    <body onload="update_forms()">
+    <style id="theSty"></style>
+    <body onload="updateForms()">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="seo_tool.js"></script>
         <h1>SEO Keyword Tool</h1>
-        <textarea id="keywords_form" style="width:1000px;" required placeholder='Please enter a list of search terms separated by line breaks.'></textarea>
+        <textarea id="keywordsForm" style="width:1000px;" required placeholder='Please enter a list of search terms separated by line breaks.'></textarea>
         
-        <p id="key_vals"></p>
+        <p id="keyVals"></p>
         <hr>
         <table>
             <tr>  
-            <button id="reset_button" onclick="reset_forms()"> Reset </button>
-            <button id="update_button" onclick="process_form()"> Update Keywords </button>
-            <button id="update_txt_button" onclick="update_forms()"> Update Text </button>
-                <td><h2 id="txt_header"></h2>
-            <p id="txt_err"></p>
-            <p id="entered_txt" style="width:1000px"></p>
+            <button id="resetButton"> Reset </button>
+            <button id="updateButton"> Update Keywords </button>
+            <button id="updateTxtButton"> Update Text </button>
+                <td><h2 id="txtHeader"></h2>
+            <p id="txtErr"></p>
+            <p id="enteredTxt" style="width:1000px"></p>
             <div class="container">
                 <div class="backdrop">
                     <div class="highlights">
                         
                     </div></div>
-            <textarea id='srch_txt' style="width:1000px; height:500px;" required></textarea>
+            <textarea id='srchTxt' style="width:1000px; height:500px;" required></textarea>
                 </div>
-            <button id="submit_button" onclick="process_form()"> Submit </button></td>
+            <button id="submitButton"> Submit </button></td>
                 <td valign="top">
                     
-                    <table id="the_table">
+                    <table id="theTable">
                         
                         
                     </table>
