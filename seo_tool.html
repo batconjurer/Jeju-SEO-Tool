@@ -1,30 +1,20 @@
 <!DOCTYPE html>
 
 <html>
-    <head src="jquery-3.2.1.slim.min.js">
+    <head >
         <title>SEO Keyword Tool</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <style id="the_sty">
     </style>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
     <script>
+            
     var hlt_lock=false;
     var init_sty='';
     
     
-    
-    function handleInput(){
-        var text=document.getElementById('srch_txt').value;
-        var highlightedText = applyHighlights(text);
-        $highlights.html(highlightedText);
-    }
-    
-    
-    function handlScroll(){
-        var scrollTop= document.getElementById('srch_txt').scrollTop();
-        $backdrop.scrollTop(scrollTop);
-    }
     
     function reset_forms(){
         if ( confirm('This will reset all forms and delete all text.') ){
@@ -61,6 +51,7 @@
         
     }
     
+    $(document).ready(function(){
     function process_form(txt){
         var inpObj=document.getElementById('keywords_form');
         var inpTxt= document.getElementById('srch_txt');
@@ -77,9 +68,11 @@
         
             }   
         } 
+   
     
     function do_search(kwds,srch_txt){
         var kwds=kwds.split(/\r?\n/);
+        
         
         document.getElementById('srch_txt').style.visibility='hidden';
         document.getElementById('reset_button').style.visibility='visible';
@@ -87,7 +80,7 @@
         document.getElementById('update_txt_button').style.visibility='visible';
         document.getElementById('submit_button').style.visibility='hidden';
         document.getElementById('txt_header').innerHTML='Entered text.';
-        document.getElementById('entered_txt').innerHTML='<div style="white-space: pre-wrap;">'+srch_txt+'</div>';
+        document.getElementById('entered_txt').innerHTML+='<div style="white-space: pre-wrap;">'+srch_txt+'</div>';
         
         document.getElementById('the_sty').innerHTML=
                 'table,th, td {border: 1px solid black;}';
@@ -212,7 +205,7 @@
         }
     }
     
-    
+    });
 </script>
     <body onload="update_forms()">
         <h1>SEO Keyword Tool</h1>
