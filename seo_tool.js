@@ -1,12 +1,12 @@
 var hltLock=false;
-var initSty='textarea {margin: 0; border-radius: 0; }\
+//var initSty='textarea {margin: 0; border-radius: 0; color:#333333; background-color:transparent; }\
     .backdrop{overflow: auto;}\
     .highlights{white-space:pre-wrap; word-wrap: break-word;}\
-     textarea{#444; background-color:transparent;}\
      .highlights{color:transparent;}\
      mark {color:transparent; background-color:#FFFF00}\
-     .backdrop{background-color:#fff}';
+     .backdrop{background-color:#FFFFFF}';
 
+var initSty='';
 
 function updateForms(){
         $('#keyVals').html("");
@@ -44,7 +44,8 @@ function updateForms(){
         if(inpObj.checkValidity() == false){
             $('#keyVals').html(inpObj.validationMessage);
         } else if(inpTxt.checkValidity()==false){
-            $('#txtErr').html("<span style='color:red;background-color:yellow;'>You have not entered any text to be searched.</span>");
+            $('#txtErr').html("<span style='color:red;background-color:yellow;'>"+
+                    "You have not entered any text to be searched.</span>");
         } else{
             doSearch(inpObj.value,inpTxt.value);
         
@@ -57,16 +58,22 @@ function updateForms(){
           $('#keyVals').html('You have entered more than 20 search terms. Using only the'
           +'first 20.');
         }
+        for(i=0; i<kwds.length;i++){
+            kwds[i]=kwds[i].trim();
+        }
         
-        kwds=kwds.slice(0,20);
+        kwds=removeAll(kwds,'')
+        
         
         for(i=0; i<kwds.length; i++){
             kwds[i]=$('<div>').text(kwds[i]).html();
         }
         
+        kwds=kwds.slice(0,20);
+        
         var safeTxt=$('<div>').text(srchTxt).html();
         
-        $('#srchTxt').hide();
+        //$('#srchTxt').hide();
         $('#resetButton').show();
         $('#updateButton').show();
         $('#updateTxtButton').show();
@@ -104,15 +111,15 @@ function updateForms(){
                 '\')" onmouseout="var2Hghlght(\''+kwd+'\')">'
                 +kwd+'</button></td><td>'+searchAll(kwd,str).length+'</td><td>'
                +'&#10005'+'</td></tr>';
-        for (i=0;i<strIndices.length;i++){
-            if(strIndices[i]<100){
+        
+            if(wordPlacement(kwd,str)<100){
                 otpt='<tr><td><button id="'+kwd+'" onclick="highlight(\''+kwd+'\')"'
                 +'onmouseover="varHghlght(\''+kwd
                 +'\')" onmouseout="var2Hghlght(\''+kwd+'\')">'
                 +kwd+'</button></td><td>'+searchAll(kwd,str).length+'</td><td>'
                +'&#10003'+'</td></tr>';
             }
-            }
+            
         return otpt;
     }
     
@@ -120,6 +127,15 @@ function updateForms(){
         return this.slice(0,i)+toRep+this.slice(j,);
     }
     
+    function removeAll(array,item){
+        var newArray=[];
+        for(i=0;i<array.length;i++){
+            if(array[i]!=item){
+                newArray.push(array[i]);
+            }
+        }
+        return newArray;
+    }
     
      function unhghlght(txt){
         var re=new RegExp('<span style="background-color: #FFFF00">',"g");
@@ -184,32 +200,17 @@ function updateForms(){
         }
     }
     
+    function wordPlacement(kwd,str){
+      var strIndex=Math.min.apply(null,searchAll(kwd,str));
+      if (searchAll(kwd,str)==[]){
+          return strIndex;
+      }
+      str=str.slice(0,strIndex);
+      return str.match(/\b/g)==null ? 0: str.match(/\b/g).length/2;
+  }
+    
 $(document).ready(function(){
-        
-    
-        
-    /*    $("#srchTxt").on({
-        'input':handleInput,
-        'scroll':handleScroll
-        });
-    
-    
-    function handleInput(){
-        var text=document.getElementById('srchTxt').value;
-        var highlightedText = applyHighlights(text);
-        $highlights.html(highlightedText);
-    }
-    
-    function applyHighlights(text){
-        return text
-                .replace(/\n$/g,'\n\n')
-                .replace(/[A-Z].*?\b/g,'<mark>$&</mark>');
-    }
-    
-    function handleScroll(){
-        var scrollTop= document.getElementById('srchTxt').scrollTop;
-        $(backdrop).scrollTop(scrollTop);
-    }*/
+       
     
     $('#resetButton').click(function(){
         if ( confirm('This will reset all forms and delete all text.') ){
@@ -239,10 +240,11 @@ $(document).ready(function(){
     
     $('#submitButton').click(function() {
         processForm();
+        $('html,body').scrollTop(0);
     });
     
     $('#updateTxtButton').click(function(){
         updateForms();
     });
-    
+        
     });
