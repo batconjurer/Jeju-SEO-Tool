@@ -32,6 +32,7 @@ function updateForms(){
         $('#updateButton').hide();
         $('#updateTxtButton').hide();
         $('#submitButton').show();
+        $('#find100').hide();
         $('#theSty').html(initSty);
         
     }
@@ -90,7 +91,7 @@ function updateForms(){
         $('#submitButton').hide();
         $('#txtHeader').html('Entered text.');
         $('#enteredTxt').html('<div style="white-space: pre-wrap;">'+safeTxt+'</div>');
-        
+        $('#find100').show();
         $('#theSty').append('table,th, td {border: 1px solid black;}');
         $('#theSty').append('th,td {padding: 15px;}');
         $('#theTable').append('<tr><th> Kewyord'+
@@ -124,14 +125,14 @@ function updateForms(){
     function prepareString(kwd,i,str){
         i++;
         var strIndices=searchAll(kwd,str);
-        var otpt='<tr><td>'+i+'&nbsp <button id="'+kwd+'" onclick="highlight(\''+kwd+'\')"'
+        var otpt='<tr><td>'+i+'&nbsp <button type="button" id="'+kwd+'" onclick="highlight(\''+kwd+'\')"'
                 +'onmouseover="varHghlght(\''+kwd+
                 '\')" onmouseout="var2Hghlght(\''+kwd+'\')">'
                 +kwd+'</button></td><td>'+searchAll(kwd,str).length+'</td><td>'
                +'&#10005'+'</td></tr>';
         
             if(wordPlacement(kwd,str)<100){
-                otpt='<tr><td>'+i+'&nbsp <button id="'+kwd+'" onclick="highlight(\''+kwd+'\')"'
+                otpt='<tr><td>'+i+'&nbsp <button type="button" id="'+kwd+'" onclick="highlight(\''+kwd+'\')"'
                 +'onmouseover="varHghlght(\''+kwd
                 +'\')" onmouseout="var2Hghlght(\''+kwd+'\')">'
                 +kwd+'</button></td><td>'+searchAll(kwd,str).length+'</td><td>'
@@ -164,32 +165,37 @@ function updateForms(){
         hltLock=false;
     }
     
+    
+    
     function highlight(kwd){
         var butt=document.getElementById(kwd);
+        unhghlght($('#enteredTxt').html());
         var txt=$('#enteredTxt').html();
         var indices=searchAll(kwd,txt).sort(function(a, b){return a - b});
         indices=indices.reverse();
         
-        
-        if(butt.style.color=="blue"){
-            if (hltLock==true){
-                unhghlght(txt);
-                for (i=0;i<indices.length;i++){
-                var toRep='<span style="background-color: #FFFF00">'
+        if(butt.style.color=="blue" || butt.style.color=="black"){
+            
+        for (i=0;i<indices.length;i++){
+                    var toRep='<span style="background-color: #FFFF00">'
                        +txt.slice(indices[i],indices[i]+kwd.length)+'</span>';
-                txt=txt.indexReplace(toRep,indices[i],indices[i]+kwd.length);
-                $('#enteredTxt').html(txt);
-                
-            }
-        }
+                    txt=txt.indexReplace(toRep,indices[i],indices[i]+kwd.length);
+                }
+             $('#enteredTxt').html(txt);
+            $(":button").css("color","black");
             butt.style.color="red";
             hltLock=true;
-        
-        } else if (butt.style.color=="red") {
-            unhghlght(txt);
+        } else if (butt.style.color=='red'){
             butt.style.color="black";
         }
     }
+        
+        
+        
+        
+            
+    
+    
 
     function varHghlght(kwd){
         var butt=document.getElementById(kwd);
@@ -202,9 +208,10 @@ function updateForms(){
             var toRep='<span style="background-color: #FFFF00">'
                        +txt.slice(indices[i],indices[i]+kwd.length)+'</span>';
             txt=txt.indexReplace(toRep,indices[i],indices[i]+kwd.length);
-            $('#enteredTxt').html(txt);
-            butt.style.color="blue";
+            
         }
+        $('#enteredTxt').html(txt);
+        butt.style.color="blue";
         }
     }
         
@@ -227,7 +234,8 @@ $(document).ready(function(){
         $('#txtErr').html('');
         $('#theTable').html('');
         $('#enteredTxt').html('');
-        $('#srchTxt').style.visibility='visible';
+        $('#find100').hide();
+        $('#srchTxt').show();
         $('#txtHeader').html('Enter text to be searched below.');
         $('#resetButton').hide();
         $('#updateButton').hide();
@@ -257,8 +265,21 @@ $(document).ready(function(){
     });
     
     $('#find100').click(function(){
-        
-        
+      var re=/\b\w/g;
+      var str=$('#enteredTxt').html();
+      var indices=[];
+      var i=0;
+      while((match=re.exec(str))!=null && i<=100){
+          indices.push(match.index);
+          i++;
+      }
+      if(100<=indices.length){
+          if(indices[100]){
+          str=str.indexReplace('</span>',indices[100],indices[100]);
+          str=str.indexReplace('<span style="background-color: red">',indices[99],indices[99]);
+          $('#enteredTxt').html(str);
+        }
+    }  
     });
         
     });
