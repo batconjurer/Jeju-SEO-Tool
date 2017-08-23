@@ -1,4 +1,4 @@
-// This file belongs to the project "Jeju SEO Tool" which was released under the GPL 3.0 licence
+// This file belongs to the project "Jeju SEO Tool" which was released under the GPL 3.0 license
 // See https://github.com/batconjurer/Jeju-SEO-Tool/blob/master/LICENSE for full license details.
 
 var hltLock=false;
