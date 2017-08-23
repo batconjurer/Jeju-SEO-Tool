@@ -1,5 +1,5 @@
-<! This file belongs to the project "Jeju SEO Tool" which was released under the GPL 3.0 licence>
-<! See https://github.com/batconjurer/Jeju-SEO-Tool/blob/master/LICENSE for full license details.>
+// This file belongs to the project "Jeju SEO Tool" which was released under the GPL 3.0 licence
+// See https://github.com/batconjurer/Jeju-SEO-Tool/blob/master/LICENSE for full license details.
 
 var hltLock=false;
 //var initSty='textarea {margin: 0; border-radius: 0; color:#333333; background-color:transparent; }\
