@@ -21,7 +21,9 @@
      .backdrop{background-color:#FFFFFF}';*/
 
 var initSty='';
-
+var preText='<div style="white-space: pre-wrap;">';
+var subText='</div>';
+var boldLock=false;
 function updateForms(){
         $('#keyVals').html("");
         $('#txtErr').html('');
@@ -69,10 +71,8 @@ function updateForms(){
     
     function doSearch(kwds,srchTxt){
         var kwds=kwds.split(/\r?\n/);
-         if (kwds.length>20){
-          $('#keyVals').html('You have entered more than 20 search terms. Using only the'
-          +'first 20.');
-        }
+         
+        
         for(i=0; i<kwds.length;i++){
             kwds[i]=kwds[i].trim();
         }
@@ -81,7 +81,10 @@ function updateForms(){
         for(i=0; i<kwds.length; i++){
             kwds[i]=$('<div>').text(kwds[i]).html();
         }
-        
+        if (kwds.length>20){
+          $('#keyVals').html('You have entered more than 20 search terms. Using only the'
+          +' first 20.');
+          }
         kwds=kwds.slice(0,20);
         var safeTxt=$('<div>').text(srchTxt).html();
         
@@ -91,7 +94,7 @@ function updateForms(){
         $('#updateTxtButton').show();
         $('#submitButton').hide();
         $('#txtHeader').html('Entered text.');
-        $('#enteredTxt').html('<div style="white-space: pre-wrap;">'+safeTxt+'</div>');
+        $('#enteredTxt').html(preText+safeTxt+subText);
         $('#find100').show();
         $('#theSty').append('table,th, td {border: 1px solid black;}');
         $('#theSty').append('th,td {padding: 15px;}');
@@ -266,21 +269,34 @@ $(document).ready(function(){
     });
     
     $('#find100').click(function(){
-      var re=/\b\w/g;
+      if(boldLock==false){
+      var re=/[^'-/\@]\b\w/g;
       var str=$('#enteredTxt').html();
+      str=str.slice(preText.length,-subText.length);
       var indices=[];
       var i=0;
+      
       while((match=re.exec(str))!=null && i<=100){
           indices.push(match.index);
           i++;
       }
+     
+      
+      
       if(100<=indices.length){
           if(indices[100]){
           str=str.indexReplace('</span>',indices[100],indices[100]);
-          str=str.indexReplace('<span style="background-color: red">',indices[99],indices[99]);
-          $('#enteredTxt').html(str);
+          str=str.indexReplace('<span style="background-color: red">',indices[99]+1,indices[99]);
+          $('#enteredTxt').html(preText+str+subText);
+        }else {
+            str=str.append('</span>');
+            str=str.indexReplace('<span style="background-color: red">',indices[99]+1,indices[99]);
+          $('#enteredTxt').html(preText+str+subText);
         }
-    }  
+        
+    }
+    
+      }
     });
         
     });
@@ -307,7 +323,7 @@ $(document).ready(function(){
                
             <button id="submitButton"> Submit </button></td>
                 <td valign="top">
-                    
+                    <p id="hundredWords"></p>
                     <table id="theTable">
                         
                         
