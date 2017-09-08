@@ -28,6 +28,8 @@ function updateForms(){
         $('#updateTxtButton').hide();
         $('#submitButton').show();
         $('#findHundred').hide();
+        $('#inst1').show();
+        $('#inst2').hide();
         $('#theSty').html(initSty);
         hltLock.hundred=false;
         hltLock.keyword=false;
@@ -99,14 +101,16 @@ function updateForms(){
     
     
     function doSearch(kwds,srchTxt){
-        var kwds=kwds.split(/\r?\n/);
-         
+        var kwds=kwds.replace(/\r?\n/g,',');
+        kwds=kwds.split(',');
+        
         
         for(i=0; i<kwds.length;i++){
             kwds[i]=kwds[i].trim();
         }
         
         kwds=removeAll(kwds,'');
+        
         for(i=0; i<kwds.length; i++){
             kwds[i]=$('<div>').text(kwds[i]).html();
         }
@@ -122,6 +126,8 @@ function updateForms(){
         $('#updateButton').show();
         $('#updateTxtButton').show();
         $('#submitButton').hide();
+        $('#inst1').hide();
+        $('#inst2').show();
         $('#txtHeader').html('Entered text.');
         $('#enteredTxt').html(preText+safeTxt+subText);
         $('#findHundred').show();
@@ -311,6 +317,8 @@ $(document).ready(function(){
         $('#keywordsForm').value='';
         $('#srchTxt').val('');
         $('#theSty').html(initSty);
+        $('#inst1').show();
+        $('#inst2').hide();
         hltLock.hundred=false;
         hltLock.keyword=false;
     }
@@ -338,5 +346,4 @@ $(document).ready(function(){
     });
     
     });
-    
     

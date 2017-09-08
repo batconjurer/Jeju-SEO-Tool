@@ -13,9 +13,25 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="seo_tool.js"></script>
         <h1>SEO Keyword Tool</h1>
-        <textarea id="keywordsForm" style="width:500px;" required placeholder='Please enter a list of search terms separated by line breaks.'></textarea>
+        <table>
+            <col width="550px">
+            <tr>
+            <td>
+        <textarea id="keywordsForm" style="width:500px;" required placeholder='Please enter a list of search terms separated by commas or on separate lines.'></textarea>
         
         <p id="keyVals"></p>
+            </td>
+            <td>
+               <h2> Instructions: </h2>
+               <p id="inst1"> In the box on the left, please enter the keyphrases to be searched.<br> Either include
+                   each keyphrase in a separate line, or separate them <br> by commas. Then enter the text
+                   to be searched in the box beneath. <br> Press submit to process the input.</p>
+               <p id="inst2"> A button has been created for each keyphrase Clicking
+                   the  <br> button toggles highlighting.  Hovering the cursor over the <br> button also
+                   highlights the keyphrase  provided that no other <br>  keyphrases are highlighted. 
+               The "Find 100th word" button <br>  toggles highlighting for the 100th word.</p>
+            </td>
+        </table>
         <hr>
         <table>
             <col width="550px">
@@ -26,12 +42,11 @@
                 <td><h2 id="txtHeader"></h2>
             <p id="txtErr"></p>
             <p id="enteredTxt" style="width:500px"></p>
-          
+            <button id="submitButton"> Submit </button>
             <textarea id='srchTxt' style="width:500px; height:500px;" required></textarea>
-               
-            <button id="submitButton"> Submit </button></td>
+            </td>
                 <td valign="top">
-                    
+                    <p id="hundredWords"></p>
                     <table id="theTable">
                         
                         
