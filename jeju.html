@@ -7,50 +7,13 @@
         <title>SEO Keyword Tool</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="jeju_style.css">
     </head>
-    <style id="theSty">
-        
-        .dropbtn {
-            color: white;
-            font-size: 16px;
-            border-radius: 25px;
-            cursor: pointer;
-        }
-
-        .dropbtn:hover, .dropbtn:focus {
-            background-color: #3e8e41;
-        }
-
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-       
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-        }
-
-        
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-        
-        .dropdown-content a:hover {background-color: #f1f1f1}
-        .show {display:block;}
-        
-    </style>
+    <style id="theSty"></style>
     <body onload="updateForms()">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="jeju.js"></script>
-        <h1>SEO Keyword Tool</h1>
+        <h1>Jeju SEO Keyword Tool</h1>
         <table>
             <col width="550px">
             <tr>
@@ -64,10 +27,13 @@
                <p id="inst1"> In the box on the left, please enter the keyphrases to be searched.<br> Either include
                    each keyphrase in a separate line, or separate them <br> by commas. Then enter the text
                    to be searched in the box beneath. <br> Press submit to process the input.</p>
-               <p id="inst2"> A button has been created for each keyphrase Clicking
-                   the  <br> button toggles highlighting.  Hovering the cursor over the <br> button also
-                   highlights the keyphrase  provided that no other <br>  keyphrases are highlighted. 
-               The "Find 100th word" button <br>  toggles highlighting for the 100th word.</p>
+               <p id="inst2"> A button has been created for each keyphrase and the 100th word. Clicking
+                   the  <br> buttons toggles highlighting.
+                   <br><br>
+                   A dropdown menu allows you to sort keyphrases via 
+                   various criteria.You can <br>  also  choose to view only the keyphrases actually used or
+                    see those keyphrases <br> not used. 
+                    Changing the order or which keyphrases are visible undoes all <br> highlighting.
             </td>
         </table>
         <hr>
@@ -86,7 +52,7 @@
                
             </td>
             
-                <td valign="top">
+                <td valign="top" id="secondCol">
                     <p id="hundredWords"></p>
                 
                     <div id='kwdSort' class="dropdown"> Sort Keyphrases by:
@@ -94,11 +60,24 @@
                                   <div id="myDropdown" class="dropdown-content">
                                       <a id="order" href="#"> Order Entered </a>
                                       <a id="abc" href="#"> Alphabetical </a>
-                                      <a id="numberDesc" href="#"> Number of occurences (descending) </a>
-                                      <a id="numberAsc" href="#"> Number of occurences (ascending) </a>
+                                      <a id="numberDesc" href="#"> Number of occurrences (descending) </a>
+                                      <a id="numberAsc" href="#"> Number of occurrences (ascending) </a>
                                   </div>
                                   
                     </div>
+                    <br>
+                    <br>
+                    Show only used Keyphrases?
+                    <label class="switch">
+                        <input id='useOnly' type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                    &nbsp;&nbsp;&nbsp;&nbsp; Show only non-used Keyphrases? 
+                    <label class="switch">
+                        <input id='nonUse' type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                                          
                     <div>
                         <br>
                     </div>

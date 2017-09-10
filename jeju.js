@@ -1,4 +1,5 @@
 var hltLock={keyword:false, hundred:false};
+var toggleUsed={only:false,onlyNon:false};
 var initSty='';
 var preText='<div style="white-space: pre-wrap;">';
 var subText='</div>';
@@ -13,7 +14,6 @@ function updateForms(){
         $('#keyVals').html("");
         $('#txtErr').html('');
         $('#kwdButtons').html('');
-        $('#theTable').hide();
         $('#enteredTxt').html('');
         $('#srchTxt').show();
         $('#txtHeader').html('Enter text to be searched below.');
@@ -25,10 +25,17 @@ function updateForms(){
         $('#theTable').html('');
         $('#inst1').show();
         $('#inst2').hide();
-        $("#kwdSort").hide();
         $('#theSty').append('table,th, td {border: 0px}');
         $('#theSty').append('th,td {padding: 0px;}');
         $('#sortBtn').html('Order Entered');
+        $('#secondCol').hide();
+        document.getElementById('useOnly').checked=false;
+        document.getElementById('nonUse').checked=false;
+        
+        
+        toggleUsed.only=false;
+        toggleUsed.onlyNon=false;
+                
         
         hltLock.hundred=false;
         hltLock.keyword=false;
@@ -97,7 +104,7 @@ function updateForms(){
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
 
     
-    function processForm(sortType=null){
+    function processForm(sortType=null,toggleType=null){
         var inpObj=document.getElementById('keywordsForm');
         var inpTxt= document.getElementById('srchTxt');
         updateForms();
@@ -108,14 +115,14 @@ function updateForms(){
             $('#txtErr').html("<span style='color:red;background-color:yellow;'>"+
                     "You have not entered any text to be searched.</span>");
         } else{
-            doSearch(inpObj.value,inpTxt.value.trim(),sortType);
+            doSearch(inpObj.value,inpTxt.value.trim(),sortType,toggleType);
         
             }  
         }
         
         
     
-    function doSearch(kwds,srchTxt,sortType){
+    function doSearch(kwds,srchTxt,sortType,toggleType){
         var kwds=kwds.replace(/\r?\n/g,',');
         var safeTxt=$('<div>').text(srchTxt).html();
         kwds=kwds.split(',');
@@ -125,6 +132,7 @@ function updateForms(){
             kwds[i]=kwds[i].trim();
         }
         
+        
         kwds=removeAll(kwds,'');
         kwds=onceOnly(kwds);
         
@@ -133,6 +141,7 @@ function updateForms(){
             kwds[i]=$('<div>').text(kwds[i]).html();
         }
         
+        kwds=usedProcess(kwds,safeTxt,toggleType);
         kwds=sortOption(kwds,sortType,safeTxt);
         
         if (kwds.length>20){
@@ -153,10 +162,11 @@ function updateForms(){
         $('#txtHeader').html('Entered text.');
         $('#enteredTxt').html(preText+safeTxt+subText);
         $('#findHundred').show();
-        $('#kwdSort').show();
+        //$('#kwdSort').show();
         $('#theSty').append('table,th, td {border: 1px solid black;}');
         $('#theSty').append('th,td {padding: 15px;}');
-        $('#theTable').show();
+        //$('#theTable').show();
+        $('#secondCol').show();
         
         $('#theTable').append('<tr><th> Kewyord'+
          '</th><th>Number of Occurrences </th><th> In first 100 words\? </th></tr>');
@@ -398,6 +408,44 @@ function updateForms(){
         }
     }
     
+    function usedProcess(kwds,srchTxt,toggleType){
+        
+        switch(toggleType){
+            case 1:
+                var newKwds=[];
+                for (i=0;i<kwds.length;i++){
+                    if(searchAll(kwds[i],srchTxt).length!=0){
+                        newKwds.push(kwds[i]);
+                    }                    
+                }
+                document.getElementById('useOnly').checked=true;
+                if(toggleUsed.onlyNon==true){
+                    toggleUsed.onlyNon=false;
+                }
+            
+                toggleUsed.only=true;
+                return newKwds;
+                break;
+            case 2:
+                var newKwds=[];
+                for (i=0;i<kwds.length;i++){
+                    if(searchAll(kwds[i],srchTxt).length==0){
+                        newKwds.push(kwds[i]);
+                    }                    
+                }
+                document.getElementById('nonUse').checked=true;
+                if(toggleUsed.only==true){
+                    toggleUsed.only=false;
+                }
+            
+                toggleUsed.onlyNon=true;
+                return newKwds;
+                break;
+            default:
+                return kwds;
+                break;
+        }
+    }
 /*jQuery logic
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
@@ -418,12 +466,13 @@ $(document).ready(function(){
         $('#updateButton').hide();
         $('#updateTxtButton').hide();
         $('#submitButton').show();
-        $('#keywordsForm').value='';
+        $('#keywordsForm').val('');
         $('#srchTxt').val('');
         $('#theSty').append('table,th, td {border: 0px}');
         $('#theSty').append('th,td {padding: 0px;}');
         $('#inst1').show();
         $('#inst2').hide();
+        $('#secondCol').hide();
         $('#sortBtn').html('Order Entered');
         hltLock.hundred=false;
         hltLock.keyword=false;
@@ -476,7 +525,69 @@ $(document).ready(function(){
         $('html,body').scrollTop(0);  
         
     });
+    
+    $('#useOnly').click(function(){
+        
+        switch($('#sortBtn').html()){
+            case 'Order Entered':
+                var sortType=null;
+                break;
+                
+            case 'Number of Occurences (Descending)':
+                var sortType=1;
+                break;
+                
+            case 'Number of Occurences (Ascending)':
+                var sortType=2;
+                break;
+                
+            case 'Alphabetical Order':
+                var sortType=3;
+                break;
+        }
+        
+        if (toggleUsed.only==false){
+            
+            processForm(sortType,1);
+            
+        } else{
+            
+            processForm(sortType,null);
+            
+        }
         
     });
     
-    
+    $('#nonUse').click(function(){
+        
+        switch($('#sortBtn').html()){
+            case 'Order Entered':
+                var sortType=null;
+                break;
+                
+            case 'Number of Occurences (Descending)':
+                var sortType=1;
+                break;
+                
+            case 'Number of Occurences (Ascending)':
+                var sortType=2;
+                break;
+                
+            case 'Alphabetical Order':
+                var sortType=3;
+                break;
+        }
+        
+        if (toggleUsed.onlyNon==false){
+            
+            processForm(sortType,2);
+            
+        } else{
+            
+            processForm(sortType,null);
+            
+        }
+        
+    });
+        
+    });

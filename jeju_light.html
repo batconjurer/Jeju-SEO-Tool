@@ -8,6 +8,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <style id="theSty">
+        
+        
         .dropbtn {
             color: white;
             font-size: 16px;
@@ -15,18 +17,18 @@
             cursor: pointer;
         }
 
-        /* Dropdown button on hover & focus */
+        
         .dropbtn:hover, .dropbtn:focus {
             background-color: #3e8e41;
         }
 
-        /* The container <div> - needed to position the dropdown content */
+        
         .dropdown {
             position: relative;
             display: inline-block;
         }
 
-        /* Dropdown Content (Hidden by Default) */
+        
         .dropdown-content {
             display: none;
             position: absolute;
@@ -36,7 +38,7 @@
             z-index: 1;
         }
 
-        /* Links inside the dropdown */
+        
         .dropdown-content a {
             color: black;
             padding: 12px 16px;
@@ -44,18 +46,79 @@
             display: block;
         }
 
-        /* Change color of dropdown links on hover */
+        
         .dropdown-content a:hover {background-color: #f1f1f1}
 
-        /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+        
         .show {display:block;}
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        
+        
+        .switch input {display:none;}
+        
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+        
+        
     </style>
-    <body onload="updateForms()">
+    
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script>
    
      
 var hltLock={keyword:false, hundred:false};
+var toggleUsed={only:false,onlyNon:false};
 var initSty='';
 var preText='<div style="white-space: pre-wrap;">';
 var subText='</div>';
@@ -70,7 +133,6 @@ function updateForms(){
         $('#keyVals').html("");
         $('#txtErr').html('');
         $('#kwdButtons').html('');
-        $('#theTable').hide();
         $('#enteredTxt').html('');
         $('#srchTxt').show();
         $('#txtHeader').html('Enter text to be searched below.');
@@ -82,10 +144,17 @@ function updateForms(){
         $('#theTable').html('');
         $('#inst1').show();
         $('#inst2').hide();
-        $("#kwdSort").hide();
         $('#theSty').append('table,th, td {border: 0px}');
         $('#theSty').append('th,td {padding: 0px;}');
         $('#sortBtn').html('Order Entered');
+        $('#secondCol').hide();
+        document.getElementById('useOnly').checked=false;
+        document.getElementById('nonUse').checked=false;
+        
+        
+        toggleUsed.only=false;
+        toggleUsed.onlyNon=false;
+                
         
         hltLock.hundred=false;
         hltLock.keyword=false;
@@ -154,7 +223,7 @@ function updateForms(){
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
 
     
-    function processForm(sortType=null){
+    function processForm(sortType=null,toggleType=null){
         var inpObj=document.getElementById('keywordsForm');
         var inpTxt= document.getElementById('srchTxt');
         updateForms();
@@ -165,14 +234,14 @@ function updateForms(){
             $('#txtErr').html("<span style='color:red;background-color:yellow;'>"+
                     "You have not entered any text to be searched.</span>");
         } else{
-            doSearch(inpObj.value,inpTxt.value.trim(),sortType);
+            doSearch(inpObj.value,inpTxt.value.trim(),sortType,toggleType);
         
             }  
         }
         
         
     
-    function doSearch(kwds,srchTxt,sortType){
+    function doSearch(kwds,srchTxt,sortType,toggleType){
         var kwds=kwds.replace(/\r?\n/g,',');
         var safeTxt=$('<div>').text(srchTxt).html();
         kwds=kwds.split(',');
@@ -182,6 +251,7 @@ function updateForms(){
             kwds[i]=kwds[i].trim();
         }
         
+        
         kwds=removeAll(kwds,'');
         kwds=onceOnly(kwds);
         
@@ -190,6 +260,7 @@ function updateForms(){
             kwds[i]=$('<div>').text(kwds[i]).html();
         }
         
+        kwds=usedProcess(kwds,safeTxt,toggleType);
         kwds=sortOption(kwds,sortType,safeTxt);
         
         if (kwds.length>20){
@@ -210,10 +281,11 @@ function updateForms(){
         $('#txtHeader').html('Entered text.');
         $('#enteredTxt').html(preText+safeTxt+subText);
         $('#findHundred').show();
-        $('#kwdSort').show();
+        //$('#kwdSort').show();
         $('#theSty').append('table,th, td {border: 1px solid black;}');
         $('#theSty').append('th,td {padding: 15px;}');
-        $('#theTable').show();
+        //$('#theTable').show();
+        $('#secondCol').show();
         
         $('#theTable').append('<tr><th> Kewyord'+
          '</th><th>Number of Occurrences </th><th> In first 100 words\? </th></tr>');
@@ -455,6 +527,44 @@ function updateForms(){
         }
     }
     
+    function usedProcess(kwds,srchTxt,toggleType){
+        
+        switch(toggleType){
+            case 1:
+                var newKwds=[];
+                for (i=0;i<kwds.length;i++){
+                    if(searchAll(kwds[i],srchTxt).length!=0){
+                        newKwds.push(kwds[i]);
+                    }                    
+                }
+                document.getElementById('useOnly').checked=true;
+                if(toggleUsed.onlyNon==true){
+                    toggleUsed.onlyNon=false;
+                }
+            
+                toggleUsed.only=true;
+                return newKwds;
+                break;
+            case 2:
+                var newKwds=[];
+                for (i=0;i<kwds.length;i++){
+                    if(searchAll(kwds[i],srchTxt).length==0){
+                        newKwds.push(kwds[i]);
+                    }                    
+                }
+                document.getElementById('nonUse').checked=true;
+                if(toggleUsed.only==true){
+                    toggleUsed.only=false;
+                }
+            
+                toggleUsed.onlyNon=true;
+                return newKwds;
+                break;
+            default:
+                return kwds;
+                break;
+        }
+    }
 /*jQuery logic
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
@@ -475,12 +585,13 @@ $(document).ready(function(){
         $('#updateButton').hide();
         $('#updateTxtButton').hide();
         $('#submitButton').show();
-        $('#keywordsForm').value='';
+        $('#keywordsForm').val('');
         $('#srchTxt').val('');
         $('#theSty').append('table,th, td {border: 0px}');
         $('#theSty').append('th,td {padding: 0px;}');
         $('#inst1').show();
         $('#inst2').hide();
+        $('#secondCol').hide();
         $('#sortBtn').html('Order Entered');
         hltLock.hundred=false;
         hltLock.keyword=false;
@@ -533,12 +644,76 @@ $(document).ready(function(){
         $('html,body').scrollTop(0);  
         
     });
+    
+    $('#useOnly').click(function(){
+        
+        switch($('#sortBtn').html()){
+            case 'Order Entered':
+                var sortType=null;
+                break;
+                
+            case 'Number of Occurences (Descending)':
+                var sortType=1;
+                break;
+                
+            case 'Number of Occurences (Ascending)':
+                var sortType=2;
+                break;
+                
+            case 'Alphabetical Order':
+                var sortType=3;
+                break;
+        }
+        
+        if (toggleUsed.only==false){
+            
+            processForm(sortType,1);
+            
+        } else{
+            
+            processForm(sortType,null);
+            
+        }
+        
+    });
+    
+    $('#nonUse').click(function(){
+        
+        switch($('#sortBtn').html()){
+            case 'Order Entered':
+                var sortType=null;
+                break;
+                
+            case 'Number of Occurences (Descending)':
+                var sortType=1;
+                break;
+                
+            case 'Number of Occurences (Ascending)':
+                var sortType=2;
+                break;
+                
+            case 'Alphabetical Order':
+                var sortType=3;
+                break;
+        }
+        
+        if (toggleUsed.onlyNon==false){
+            
+            processForm(sortType,2);
+            
+        } else{
+            
+            processForm(sortType,null);
+            
+        }
+        
+    });
         
     });
     
     
 </script>
-    
+  <body onload="updateForms()">  
         <h1>Jeju SEO Keyword Tool</h1>
         <table>
             <col width="550px">
@@ -553,10 +728,13 @@ $(document).ready(function(){
                <p id="inst1"> In the box on the left, please enter the keyphrases to be searched.<br> Either include
                    each keyphrase in a separate line, or separate them <br> by commas. Then enter the text
                    to be searched in the box beneath. <br> Press submit to process the input.</p>
-               <p id="inst2"> A button has been created for each keyphrase Clicking
-                   the  <br> button toggles highlighting.  Hovering the cursor over the <br> button also
-                   highlights the keyphrase  provided that no other <br>  keyphrases are highlighted. 
-               The "Find 100th word" button <br>  toggles highlighting for the 100th word.</p>
+               <p id="inst2"> A button has been created for each keyphrase and the 100th word. Clicking
+                   the  <br> buttons toggles highlighting.
+                   <br><br>
+                   A dropdown menu allows you to sort keyphrases via 
+                   various criteria.You can <br>  also  choose to view only the keyphrases actually used or
+                    see those keyphrases <br> not used. 
+                    Changing the order or which keyphrases are visible undoes all <br> highlighting.
             </td>
         </table>
         <hr>
@@ -575,7 +753,7 @@ $(document).ready(function(){
                
             </td>
             
-                <td valign="top">
+                <td valign="top" id="secondCol">
                     <p id="hundredWords"></p>
                 
                     <div id='kwdSort' class="dropdown"> Sort Keyphrases by:
@@ -583,11 +761,24 @@ $(document).ready(function(){
                                   <div id="myDropdown" class="dropdown-content">
                                       <a id="order" href="#"> Order Entered </a>
                                       <a id="abc" href="#"> Alphabetical </a>
-                                      <a id="numberDesc" href="#"> Number of occurences (descending) </a>
-                                      <a id="numberAsc" href="#"> Number of occurences (ascending) </a>
+                                      <a id="numberDesc" href="#"> Number of occurrences (descending) </a>
+                                      <a id="numberAsc" href="#"> Number of occurrences (ascending) </a>
                                   </div>
                                   
                     </div>
+                    <br>
+                    <br>
+                    Show only used Keyphrases?
+                    <label class="switch">
+                        <input id='useOnly' type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                    &nbsp;&nbsp;&nbsp;&nbsp; Show only non-used Keyphrases? 
+                    <label class="switch">
+                        <input id='nonUse' type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                                          
                     <div>
                         <br>
                     </div>
