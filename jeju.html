@@ -8,16 +8,54 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-    <style id="theSty"></style>
+    <style id="theSty">
+        
+        .dropbtn {
+            color: white;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+
+        .dropbtn:hover, .dropbtn:focus {
+            background-color: #3e8e41;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+       
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .dropdown-content a:hover {background-color: #f1f1f1}
+        .show {display:block;}
+        
+    </style>
     <body onload="updateForms()">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="seo_tool.js"></script>
+        <script src="jeju.js"></script>
         <h1>SEO Keyword Tool</h1>
         <table>
             <col width="550px">
             <tr>
             <td>
-        <textarea id="keywordsForm" style="width:500px;" required placeholder='Please enter a list of search terms separated by commas or on separate lines.'></textarea>
+        <textarea id="keywordsForm" style="width:500px;height:150px;" required placeholder='Please enter a list of search terms separated by commas or on separate lines.'></textarea>
         
         <p id="keyVals"></p>
             </td>
@@ -34,25 +72,42 @@
         </table>
         <hr>
         <table>
+            
             <col width="550px">
             <tr>  
             <button id="resetButton"> Reset </button>
             <button id="updateButton"> Update Keywords </button>
             <button id="updateTxtButton"> Update Text </button>
-                <td><h2 id="txtHeader"></h2>
+            <td valign='top'><h2 id="txtHeader"></h2> <button id="findHundred"> Highlight 100th word</button>
             <p id="txtErr"></p>
             <p id="enteredTxt" style="width:500px"></p>
             <button id="submitButton"> Submit </button>
             <textarea id='srchTxt' style="width:500px; height:500px;" required></textarea>
+               
             </td>
+            
                 <td valign="top">
                     <p id="hundredWords"></p>
+                
+                    <div id='kwdSort' class="dropdown"> Sort Keyphrases by:
+                                  <button  id="sortBtn" class="dropbtn" onclick="dropFunc()">Order Entered </button>
+                                  <div id="myDropdown" class="dropdown-content">
+                                      <a id="order" href="#"> Order Entered </a>
+                                      <a id="abc" href="#"> Alphabetical </a>
+                                      <a id="numberDesc" href="#"> Number of occurences (descending) </a>
+                                      <a id="numberAsc" href="#"> Number of occurences (ascending) </a>
+                                  </div>
+                                  
+                    </div>
+                    <div>
+                        <br>
+                    </div>
+        
                     <table id="theTable">
-                        
                         
                     </table>
                     
-                </td>
+        </td>
         </table>
     </body>
 </html>

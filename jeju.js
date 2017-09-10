@@ -1,12 +1,3 @@
-// This file belongs to the project "Jeju SEO Tool" which was released under the GPL 3.0 license
-// See https://github.com/batconjurer/Jeju-SEO-Tool/blob/master/LICENSE for full license details.
-
-/*var initSty='textarea {margin: 0; border-radius: 0; color:#333333; background-color:transparent; }\
-    .backdrop{overflow: auto;}\
-    .highlights{white-space:pre-wrap; word-wrap: break-word;}\
-     .highlights{color:transparent;}\
-     mark {color:transparent; background-color:#FFFF00}\
-     .backdrop{background-color:#FFFFFF}';*/
 var hltLock={keyword:false, hundred:false};
 var initSty='';
 var preText='<div style="white-space: pre-wrap;">';
@@ -14,12 +5,15 @@ var subText='</div>';
 
 
 
-//Text box functions 
+/*Text box functions 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
 
 function updateForms(){
         $('#keyVals').html("");
         $('#txtErr').html('');
-        $('#theTable').html('');
+        $('#kwdButtons').html('');
+        $('#theTable').hide();
         $('#enteredTxt').html('');
         $('#srchTxt').show();
         $('#txtHeader').html('Enter text to be searched below.');
@@ -28,33 +22,24 @@ function updateForms(){
         $('#updateTxtButton').hide();
         $('#submitButton').show();
         $('#findHundred').hide();
+        $('#theTable').html('');
         $('#inst1').show();
         $('#inst2').hide();
-        $('#theSty').html(initSty);
+        $("#kwdSort").hide();
+        $('#theSty').append('table,th, td {border: 0px}');
+        $('#theSty').append('th,td {padding: 0px;}');
+        $('#sortBtn').html('Order Entered');
+        
         hltLock.hundred=false;
         hltLock.keyword=false;
         
         
     }
-    
-    function processForm(txt){
-        var inpObj=document.getElementById('keywordsForm');
-        var inpTxt= document.getElementById('srchTxt');
-        updateForms();
-    
-        if(inpObj.checkValidity() == false){
-            $('#keyVals').html(inpObj.validationMessage);
-        } else if(inpTxt.checkValidity()==false){
-            $('#txtErr').html("<span style='color:red;background-color:yellow;'>"+
-                    "You have not entered any text to be searched.</span>");
-        } else{
-            doSearch(inpObj.value,inpTxt.value);
-        
-            }   
-        } 
+     
  
-    //General helper functions
-    
+/*General helper functions
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
   
     String.prototype.regexIndexOf = function(regex, startpos) {
     var indexOf = this.substring(startpos || 0).search(regex);
@@ -95,13 +80,44 @@ function updateForms(){
         }
         return newArray;
     }
+    
+    function onceOnly(array){
+        var newArray=[];
+        for(i=0; i<array.length;i++){
+            if(!newArray.includes(array[i])){
+                newArray.push(array[i]);
+            }
+        }
+        return newArray;
+    }
    
     
-    //Main logic functions
+/*Main logic functions
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+
     
+    function processForm(sortType=null){
+        var inpObj=document.getElementById('keywordsForm');
+        var inpTxt= document.getElementById('srchTxt');
+        updateForms();
     
-    function doSearch(kwds,srchTxt){
+        if(inpObj.checkValidity() == false){
+            $('#keyVals').html(inpObj.validationMessage);
+        } else if(inpTxt.checkValidity()==false){
+            $('#txtErr').html("<span style='color:red;background-color:yellow;'>"+
+                    "You have not entered any text to be searched.</span>");
+        } else{
+            doSearch(inpObj.value,inpTxt.value.trim(),sortType);
+        
+            }  
+        }
+        
+        
+    
+    function doSearch(kwds,srchTxt,sortType){
         var kwds=kwds.replace(/\r?\n/g,',');
+        var safeTxt=$('<div>').text(srchTxt).html();
         kwds=kwds.split(',');
         
         
@@ -110,16 +126,22 @@ function updateForms(){
         }
         
         kwds=removeAll(kwds,'');
+        kwds=onceOnly(kwds);
         
+                
         for(i=0; i<kwds.length; i++){
             kwds[i]=$('<div>').text(kwds[i]).html();
         }
+        
+        kwds=sortOption(kwds,sortType,safeTxt);
+        
         if (kwds.length>20){
           $('#keyVals').html('You have entered more than 20 search terms. Using only the'
           +' first 20.');
           }
+          
         kwds=kwds.slice(0,20);
-        var safeTxt=$('<div>').text(srchTxt).html();
+        
         
         $('#srchTxt').hide();
         $('#resetButton').show();
@@ -131,16 +153,21 @@ function updateForms(){
         $('#txtHeader').html('Entered text.');
         $('#enteredTxt').html(preText+safeTxt+subText);
         $('#findHundred').show();
+        $('#kwdSort').show();
         $('#theSty').append('table,th, td {border: 1px solid black;}');
         $('#theSty').append('th,td {padding: 15px;}');
+        $('#theTable').show();
+        
         $('#theTable').append('<tr><th> Kewyord'+
          '</th><th>Number of Occurrences </th><th> In first 100 words\? </th></tr>');
+        
         for (i=0; i<kwds.length;i++){
-            $('#theTable').append(prepareString(kwds[i],i,srchTxt));
-                    document.getElementById(kwds[i]).style.color="black";
+            $('#theTable').append(prepareString(kwds[i],i,safeTxt));
         }
-             
+        $(":button").css("color","black");
+        
     }
+    
     
     
     function prepareString(kwd,i,str){
@@ -165,7 +192,10 @@ function updateForms(){
     
     
     
-    //Word Highlighting Functionality
+/*Word Highlighting Functionality
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+
     
      function unhghlght(txt){
         var re=new RegExp('<span style="background-color: #FFFF00">',"g");
@@ -292,11 +322,85 @@ function updateForms(){
         }
         }
     }
+
+/*Dropdown Menu Logic
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/    
+    
+    
+    function dropFunc(){
+        document.getElementById('myDropdown').classList.toggle("show");
+    }
+    
+    
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }   
+
+/*Keyphrase Sorting Logic
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/    
+
+    function sortOption(kwds,sortType,srchTxt){
         
+        switch(sortType){
+            case 1:
+                var newKwds=[];
+                newKwds.push(kwds[0]);
+                
+                for(i=1; i<kwds.length;i++){
+                    j=0;
+                    while(searchAll(kwds[i],srchTxt).length<=searchAll(newKwds[j],srchTxt).length && j<=i){
+                        j++;
+                    }
+                    newKwds.splice(j,0,kwds[i]);
+                    
+                }
+                $('#sortBtn').html('Number of Occurences (Descending)');
+                return newKwds;
+                break;
+            case 2:
+                var newKwds=[];
+                newKwds.push(kwds[0]);
+                
+                for(i=1; i<kwds.length;i++){
+                    j=0;
+                    while(searchAll(kwds[i],srchTxt).length<=searchAll(newKwds[j],srchTxt).length && j<=i){
+                        j++;
+                    }
+                    newKwds.splice(j,0,kwds[i]);
+                    
+                }
+                $('#sortBtn').html('Number of Occurences (Ascending)');
+                return newKwds.reverse();
+                break;
+            case 3:
+                $('#sortBtn').html("Alphabetical Order");
+                return kwds.sort(function (a, b) {
+                    return a.toLowerCase().localeCompare(b.toLowerCase());
+                    });
+                break;
+            default:
+                $('#sortBtn').html('Order Entered');
+                return kwds;
+                
+            
+        }
+    }
     
-    
-    
- //jQuery logic
+/*jQuery logic
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
     
 $(document).ready(function(){
        
@@ -316,20 +420,25 @@ $(document).ready(function(){
         $('#submitButton').show();
         $('#keywordsForm').value='';
         $('#srchTxt').val('');
-        $('#theSty').html(initSty);
+        $('#theSty').append('table,th, td {border: 0px}');
+        $('#theSty').append('th,td {padding: 0px;}');
         $('#inst1').show();
         $('#inst2').hide();
+        $('#sortBtn').html('Order Entered');
         hltLock.hundred=false;
         hltLock.keyword=false;
     }
     });
+
     
-   
     
-    //Miscellaneous Button logic
-    
+/*Miscellaneous Button logic
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+        
     $('#updateButton').click(function() {
         processForm();
+        $('html,body').scrollTop(0);
     });
     
     $('#submitButton').click(function() {
@@ -339,11 +448,35 @@ $(document).ready(function(){
     
     $('#updateTxtButton').click(function(){
         updateForms();
+        $('html,body').scrollTop(0);
     });
     
     $('#findHundred').click(function() {
         hltHundred();
+    });    
+    
+    $('#order').click(function(){
+      processForm();
+      $('html,body').scrollTop(0);  
+        
     });
     
+    $('#numberDesc').click(function(){
+        processForm(1);
+        $('html,body').scrollTop(0);  
     });
+    
+    $('#numberAsc').click(function(){
+        processForm(2);
+        $('html,body').scrollTop(0);  
+    });
+    
+    $('#abc').click(function(){
+        processForm(3);
+        $('html,body').scrollTop(0);  
+        
+    });
+        
+    });
+    
     
