@@ -23,63 +23,81 @@ You should have received a copy of the GNU General Public License
 along with Jeju SEO Writing Plugin. If not, see https://www.gnu.org/licenses/gpl-3.0.en.html.
 */
 
-class jeju_seo_tool_class {
-
-	function __construct(){
-
-		if ( is_admin() ) {
-			add_action('init', array( $this, 'setup_jeju_plugin'));
-		}
-
-	}
-
-	function setup_jeju_plugin(){
-		if ( !current_user_can('edit_posts') && !current_user_can('edit_pages') ){
-			return;
-		}
-		
-		if ( !get_user_option('rich_editing') !== 'true'){
-			return;
-		}
-		
-		add_filter('jeju_buttons', array($this,'add_jeju_buttons'));
-		add_filter('jeju_external_plugin', array($this,'add_jeju_plugin'));
-		
-	}
-	
-	function add_jeju_plugin($plugin_array){
-		$plugin_array['keyword_class'] = plugin_dir_url(__FILE__).'/js/jeju.js';
-		return $plugin_array;
-	}
-
-	function add_jeju_buttons($buttons) {
-		array_push($buttons, '|', 'keyword_class');
-		return $buttons;
-	}
-/*
-function add_keywords_form() {
-	echo '<textarea id="keywords-form" style="width:500px;height:150px;" required 
-placeholder="Please enter a list of search terms separated by commas or on separate lines.">
-</textarea> <button id="kwds-submit-button"> Submit </button> <p id="key-vals"></p>';
-}
-
-add_action('edit_form_after_title','add_keywords_form');
-
-
-
-function add_keywords_table() {
-	echo '<table id="the-table"> </table>';
-}
+add_action('edit_form_after_title','add_kwd_form');
 
 add_action('edit_form_after_editor', 'add_keywords_table');
 
-function include_keywords_form_js_file(){
-	wp_enqueue_script('keywords_form', plugin_dir_url(__FILE__).'/js/jeju.js', array('jquery'));
+
+add_action('admin_head','setup_kwd_button_plugin');
+
+
+function add_kwd_form(){
+	global $typenow;
+	if ( !current_user_can('edit_posts') && !current_user_can('edit_pages') ){
+		return;
+	}
+		
+	if ( get_user_option('rich_editing') !== 'true'){
+		return;
+	}
+
+	if( !in_array($typenow, array( 'post', 'page' )) ){
+        return;
+	}
+	
+	echo '<textarea id="keywords-form" style="width:500px;height:150px;" required 
+placeholder="Please enter a list of search terms separated by commas or on separate lines.">
+</textarea> <p id="kwd-errs"></p>';
 }
 
-add_action('wp_enqueue_media','include_keywords_form_js_file');
-*/
+function add_keywords_table() {
+	global $typenow;
+	if ( !current_user_can('edit_posts') && !current_user_can('edit_pages') ){
+		return;
+	}
+		
+	if ( get_user_option('rich_editing') !== 'true'){
+		return;
+	}
+
+	if( !in_array($typenow, array( 'post', 'page' )) ){
+        return;
+	}
+	echo '<p id="srch-errs"></p> <table id="the-table"> </table>';
 }
 
-$jeju_seo_tool= new jeju_seo_tool_class;
+function setup_kwd_button_plugin(){
+	global $typenow;
+	if ( !current_user_can('edit_posts') && !current_user_can('edit_pages') ){
+		return;
+	}
+		
+	if ( get_user_option('rich_editing') !== 'true'){
+		return;
+	}
+
+	if( !in_array($typenow, array( 'post', 'page' )) ){
+        return;
+	}
+		
+	add_filter('mce_buttons', 'add_kwd_button');
+	add_filter('mce_external_plugins', 'add_kwd_plugin');
+		
+}
+	
+
+
+function add_kwd_button($buttons) {
+	array_push($buttons,'|', 'keyword_button');
+	return $buttons;
+}
+
+function add_kwd_plugin($plugin_array){
+	$plugin_array['keyword_button'] = plugins_url('/js/jeju.js',__FILE__);
+	return $plugin_array;
+}
+
+
+
+
 

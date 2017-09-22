@@ -1,24 +1,21 @@
-jQuery(function($){
     
+
+
+jQuery(function($){
+
 (function() {
-    tinymce.PluginManager.add( 'keyword_class', 
+    tinymce.PluginManager.add( 'keyword_button', 
     function( editor, url ) {
-        editor.addButton('keyword_class',{
-            title: 'Submit',
-            cmd: 'keyword_class',
-    });
+        editor.addButton('keyword_button',{
+            text: 'Jeju: Insert Keyword',
+            icon: false,
+            onclick: function() {
+                process_form(editor.getContent().slice(3,-4).trim());
+			}
+    	});
+	});
 })();
 
-
-
-/*
-$(document).ready(function(){
-    
-	$('#kwds-submit-button').click(process_form());
-
-	
-});
-*/
 /*General helper functions
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
@@ -78,14 +75,11 @@ $(document).ready(function(){
 /*Main logic functions
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
-
-    function process_form(sortType=null,toggleType=null){
-        var kwds=$('#keywords-form').val();
-        //var inp-txt= document.getElementById('srchTxt');
-        //updateForms();
+	
+	function process_form(srchTxt,sortType=null,toggleType=null){
+		var kwds=$('#keywords-form').val();
+		kwds=kwds.replace(/\r?\n/g,',');
         
-        var kwds=kwds.replace(/\r?\n/g,',');
-        //var safeTxt=$('<div>').text(srchTxt).html();
         kwds=kwds.split(',');
         
         
@@ -97,13 +91,24 @@ $(document).ready(function(){
         kwds=removeAll(kwds,'');
         kwds=onceOnly(kwds);
         
-                
-        for(i=0; i<kwds.length; i++){
-            kwds[i]=$('<div>').text(kwds[i]).html();
-        }
+		//updateForms();
+
+		if (kwds=='') {
+			$('#kwd-errs').html("<span style='color:red;background-color:yellow;'>"+
+                    "You have not entered any keywords to be searched.</span>");
+		} else if (srchTxt=='') {
+			$('#srch-errs').html("<span style='color:red;background-color:yellow;'>"+
+                    "You have not entered any text to be searched.</span>");
+		} else {
+			do_search(kwds,srchTxt,sortType, toggleType);
+		}
+	}
+
+    function do_search(kwds,srchTxt,sortType,toggleType){
+		
         
-        //kwds=usedProcess(kwds,safeTxt,toggleType);
-        //kwds=sortOption(kwds,sortType,safeTxt);
+        //kwds=usedProcess(kwds,srchTxt,toggleType);
+        //kwds=sortOption(kwds,sortType,srchTxt);
         
         if (kwds.length>20){
             $('#key-vals').html('You have entered more than 20 search terms. '+
