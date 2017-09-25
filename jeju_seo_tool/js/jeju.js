@@ -10,11 +10,16 @@ jQuery(function($){
             text: 'Jeju: Insert Keyword',
             icon: false,
             onclick: function() {
-                process_form(editor.getContent().slice(3,-4).trim());
+                processForm(editor.getContent().slice(3,-4).trim());
 			}
     	});
 	});
 })();
+
+    function updateForms(){
+        $('#error-message').html('');
+        $('#the-table').html('')
+    }
 
 /*General helper functions
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -75,10 +80,10 @@ jQuery(function($){
 /*Main logic functions
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
-	
-	function process_form(srchTxt,sortType=null,toggleType=null){
-		var kwds=$('#keywords-form').val();
-		kwds=kwds.replace(/\r?\n/g,',');
+
+    function processForm(srchTxt,sortType=null,toggleType=null){
+	var kwds=$('#keywords-form').val();
+	kwds=kwds.replace(/\r?\n/g,',');
         
         kwds=kwds.split(',');
         
@@ -91,18 +96,18 @@ jQuery(function($){
         kwds=removeAll(kwds,'');
         kwds=onceOnly(kwds);
         
-		//updateForms();
+	updateForms();
 
-		if (kwds=='') {
-			$('#kwd-errs').html("<span style='color:red;background-color:yellow;'>"+
-                    "You have not entered any keywords to be searched.</span>");
-		} else if (srchTxt=='') {
-			$('#srch-errs').html("<span style='color:red;background-color:yellow;'>"+
-                    "You have not entered any text to be searched.</span>");
-		} else {
-			do_search(kwds,srchTxt,sortType, toggleType);
-		}
+	if (kwds=='') {
+            $('#kwd-errs').html("<span style='color:red;background-color:yellow;'>"+
+            "You have not entered any keywords to be searched.</span>");
+	} else if (srchTxt=='') {
+            $('#srch-errs').html("<span style='color:red;background-color:yellow;'>"+
+            "You have not entered any text to be searched.</span>");
+	} else {
+            do_search(kwds,srchTxt,sortType, toggleType);
 	}
+    }
 
     function do_search(kwds,srchTxt,sortType,toggleType){
 		

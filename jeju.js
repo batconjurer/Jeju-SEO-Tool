@@ -123,8 +123,13 @@ function updateForms(){
         
     
     function doSearch(kwds,srchTxt,sortType,toggleType){
-        var kwds=kwds.replace(/\r?\n/g,',');
         var safeTxt=$('<div>').text(srchTxt).html();
+        $('#enteredTxt').html(preText+safeTxt+subText);
+        srchTxt=srchTxt.replace(/\r?\n/g,' ');
+        srchTxt=srchTxt.replace(/\t/g,' ');
+        safeTxt=$('<div>').text(srchTxt).html();
+        
+        var kwds=kwds.replace(/\r?\n/g,',');
         kwds=kwds.split(',');
         
         
