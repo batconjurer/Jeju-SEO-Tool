@@ -82,6 +82,9 @@ jQuery(function($){
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
 
     function processForm(srchTxt,sortType=null,toggleType=null){
+        //safeTxt=$('<div>').text(srchTxt).html();
+        
+        
 	var kwds=$('#keywords-form').val();
 	kwds=kwds.replace(/\r?\n/g,',');
         
@@ -110,7 +113,7 @@ jQuery(function($){
     }
 
     function do_search(kwds,srchTxt,sortType,toggleType){
-		
+	var safeTxt=srchTxt.replace(/<\/?p>/g,' ');
         
         //kwds=usedProcess(kwds,srchTxt,toggleType);
         //kwds=sortOption(kwds,sortType,srchTxt);
