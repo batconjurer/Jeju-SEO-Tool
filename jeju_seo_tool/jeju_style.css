@@ -1,0 +1,113 @@
+
+        .jeju-dropbtn {
+            color: white;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+
+        
+        .jeju-dropbtn:hover, .jeju-dropbtn:focus {
+            background-color: #3e8e41;
+        }
+
+        
+        .jeju-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        
+        .jeju-dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        
+        .jeju-dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        
+        .jeju-dropdown-content a:hover {
+			background-color: #f1f1f1;
+		}
+
+        
+        .show {
+			display:block;
+		}
+        
+        .jeju-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        
+        
+        .jeju-switch input {
+			display:none;
+		}
+        
+        
+        .jeju-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .jeju-slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked + .jeju-slider {
+            background-color: #2196F3;
+        }
+
+        input:focus + .jeju-slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked + .jeju-slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+
+        .jeju-slider.round {
+            border-radius: 34px;
+        }
+
+        .jeju-slider.round:before {
+            border-radius: 50%;
+        }
+        
+		table.jeju,th.jeju, td.jeju {
+			border: 1px solid black;
+		}
+		th.jeju,td.jeju {
+			padding: 15px;
+		}

@@ -23,10 +23,13 @@ You should have received a copy of the GNU General Public License
 along with Jeju SEO Writing Plugin. If not, see https://www.gnu.org/licenses/gpl-3.0.en.html.
 */
 
+/* Adding Keyphrases forms and buttons */
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+
 add_action('edit_form_after_title','add_kwd_form');
 
 add_action('edit_form_after_editor', 'add_keywords_table');
-
 
 add_action('admin_head','setup_kwd_button_plugin');
 
@@ -47,7 +50,7 @@ function add_kwd_form(){
 	
 	echo '<textarea id="keywords-form" style="width:500px;height:150px;" required 
 placeholder="Please enter a list of search terms separated by commas or on separate lines.">
-</textarea> <p id="kwd-errs"></p>';
+</textarea> <p id="error-message"></p>';
 }
 
 function add_keywords_table() {
@@ -63,7 +66,7 @@ function add_keywords_table() {
 	if( !in_array($typenow, array( 'post', 'page' )) ){
         return;
 	}
-	echo '<p id="srch-errs"></p> <table id="the-table"> </table>';
+	echo '<table id="the-table" style="border:  1px solid black"> </table>';
 }
 
 function setup_kwd_button_plugin(){
@@ -84,7 +87,7 @@ function setup_kwd_button_plugin(){
 	add_filter('mce_external_plugins', 'add_kwd_plugin');
 		
 }
-	
+
 
 
 function add_kwd_button($buttons) {
@@ -93,9 +96,14 @@ function add_kwd_button($buttons) {
 }
 
 function add_kwd_plugin($plugin_array){
-	$plugin_array['keyword_button'] = plugins_url('/js/jeju.js',__FILE__);
+	$plugin_array['keyword_button'] = plugins_url('/js/kwds_form.js',__FILE__);
 	return $plugin_array;
 }
+
+
+/* Adding Table Buttons and Functionality */
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/	
 
 
 
