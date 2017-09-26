@@ -165,7 +165,6 @@ function updateForms(){
         $('#inst1').hide();
         $('#inst2').show();
         $('#txtHeader').html('Entered text.');
-        $('#enteredTxt').html(preText+safeTxt+subText);
         $('#findHundred').show();
         //$('#kwdSort').show();
         $('#theSty').append('table,th, td {border: 1px solid black;}');
@@ -187,18 +186,19 @@ function updateForms(){
     
     function prepareString(kwd,i,str){
         i++;
-        
         if(wordPlacement(kwd,str)<100){
-            var otpt='<tr><td style="border: 1px solid black; padding: 15px;">'+i+'&nbsp'+
-                ' <button type="button" id="'+kwd+'">'+kwd+'</button></td><td style='
-                +'"border: 1px solid black; padding: 15px;">'+searchAll(kwd,str).length+'</td>'
-                +'<td style="border: 1px solid black; padding: 15px;">&#10003'+'</td></tr>';
+            var otpt='<tr><td>'+i+'&nbsp <button type="button" id="'+kwd+'" onclick="highlight(\''+kwd+'\')"'
+                +'onmouseover="varHghlght(\''+kwd
+                +'\')" onmouseout="var2Hghlght(\''+kwd+'\')">'
+                +kwd+'</button></td><td>'+searchAll(kwd,str).length+'</td><td>'
+               +'&#10003'+'</td></tr>';
         } else {
-            var otpt='<tr><td style="border: 1px solid black; padding: 15px;">'+i+'&nbsp' 
-            +'<button type="button" id="'+kwd+'">'+kwd+'</button></td><td style='
-            +'"border: 1px solid black; padding: 15px;">'+ searchAll(kwd,str).length+'</td>'
-            +'<td style="border: 1px solid black; padding: 15px;"> &#10005 </td></tr>';
-	}
+            var otpt='<tr><td>'+i+'&nbsp <button type="button" id="'+kwd+'" onclick="highlight(\''+kwd+'\')"'
+                +'onmouseover="varHghlght(\''+kwd+
+                '\')" onmouseout="var2Hghlght(\''+kwd+'\')">'
+                +kwd+'</button></td><td>'+searchAll(kwd,str).length+'</td><td>'
+               +'&#10005'+'</td></tr>';
+        }
         
         return otpt;
     }
@@ -594,3 +594,4 @@ $(document).ready(function(){
     });
         
     });
+    
