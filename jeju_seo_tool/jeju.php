@@ -23,6 +23,7 @@ You should have received a copy of the GNU General Public License
 along with Jeju SEO Writing Plugin. If not, see https://www.gnu.org/licenses/gpl-3.0.en.html.
 */
 
+
 /* Adding Keyphrases forms and buttons */
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
@@ -106,6 +107,19 @@ function add_kwd_plugin($plugin_array){
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/	
 
 
+function add_table_buttons_scripts(){
+	global $typenow;	
+
+	if( !in_array($typenow, array( 'post', 'page' )) ){
+        return;
+	}
+	echo '<script language="javascript" src="'.plugins_url('/js/table_buttons.js',__FILE__).'">';
+	echo '</script>';
+	//wp_register_script('table_buttons',plugins_url('/js/table_buttons.js',__FILE__), array('jQuery'));
+	//wp_enqueue_script('table_buttons');
+}
+
+add_action('admin_enqueue_scripts', 'add_table_buttons_scripts');
 
 
 
