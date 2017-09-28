@@ -67,7 +67,13 @@ function add_keywords_table() {
 	if( !in_array($typenow, array( 'post', 'page' )) ){
         return;
 	}
-	echo '<table id="the-table" style="border:  1px solid black"> </table>';
+	$tableString = '<table id="container" ><tr valign="top" >';
+	
+	for ( $i = 0; $i < 2; $i++ ) {
+		$tableString .= '<td><table id="the-table-'.$i.'" style="border:  1px solid black"> </table></td>';
+	}
+	
+	echo $tableString.'</tr></table>';
 }
 
 function setup_kwd_button_plugin(){
@@ -120,6 +126,3 @@ function add_table_buttons_scripts(){
 }
 
 add_action('admin_enqueue_scripts', 'add_table_buttons_scripts');
-
-
-

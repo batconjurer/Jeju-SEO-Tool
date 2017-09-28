@@ -15,7 +15,9 @@ jQuery(function($) {
 
 	function updateForms() {
         	$('#error-message').html('');
-        	$('#the-table').html('');
+			for ( i = 0; 2 > i ; i++ ) {
+        		document.getElementById( 'the-table-'+i ).innerHTML='';
+			}
     }
 
 /*Main logic functions
@@ -88,15 +90,19 @@ jQuery(function($) {
         //$('#theTable').show();
         //$('#secondCol').show();
 
-        $('#the-table').append( '<tr><th style=' +
+        var tableNewColumn = '<tr><th style=' +
                 '"border: 1px solid black; padding: 15px;"> Keyword' +
                 '</th><th style="border: 1px solid black; padding: 15px;">' +
                 'Number of Occurrences </th><th style=' +
                 '"border: 1px solid black; padding: 15px;">' + 
-                'In first 100 words\? </th></tr>' );
+                'In first 100 words\? </th></tr>';
 
         for ( i = 0; i < kwds.length; i++ ) {
-            $('#the-table').append( prepareString( kwds[i], i, safeTxt ) );
+			var whichTable = 'the-table-' + Math.floor( i / 10 );
+			if ( 0 === ( i % 10 ) ) {
+				document.getElementById( whichTable ).innerHTML += tableNewColumn;
+			}
+            document.getElementById( whichTable ).innerHTML += prepareString( kwds[i], i, safeTxt );
         }
 
     }

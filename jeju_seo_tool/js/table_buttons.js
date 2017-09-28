@@ -70,13 +70,15 @@ var toggleUsed = { only:false, onlyNon:false };
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
 
     function unHighlight( txt ) {
-        var re = new RegExp( '<span style="background-color: #ffff00;"' +
-                'data-mce-style="background-color: #ffff00;">', 'g' );
-        var re2 = new RegExp( '</span>', 'g' );
-        var re3 = new RegExp( '<span style="background-color: red">', 'g' );
-        txt = txt.replace( re, '' );
-        txt = txt.replace( re2, '' );
-        txt = txt.replace( re3, '' );
+		var matches = txt.match(/<span[^<]*class="jeju-highlight"[^<]*>[^<]*<\/span>/g);
+
+		if ( null === matches ) {
+			return;
+		}
+		for ( i = 0; i < matches.length; i++ ) {
+			var unHighlightedString = matches[i].replace( /<\/?span[^<]*>/g, '' );
+			txt = txt.replace( matches[i], unHighlightedString );
+		}
         tinymce.activeEditor.setContent( txt );
     }
 
@@ -89,7 +91,7 @@ var toggleUsed = { only:false, onlyNon:false };
             //hltHundred();
         }
 
-        
+
         if( 'blue' === butt.style.color ) {
         	butt.style.color = 'red';
 			hltLock.keyword = kwd;
@@ -108,9 +110,10 @@ var toggleUsed = { only:false, onlyNon:false };
         	indices = indices.reverse();
 
 			for ( i = 0; i < indices.length; i++) {
-                    var toRep = '<span style="background-color: #FFFF00">' +
-                       txt.slice( indices[i], indices[i] + kwd.length ) + 
-                       '</span>';
+                    var toRep = '<span style="background-color: #FFFF00"' +
+                                ' class="jeju-highlight">' +
+                                txt.slice( indices[i], indices[i] + kwd.length ) + 
+                                '</span>';
                     txt = txt.indexReplace( toRep, indices[i], indices[i] + 
                             kwd.length );
                 }
@@ -129,14 +132,16 @@ var toggleUsed = { only:false, onlyNon:false };
     function onMouseHighlight( kwd ) {
         var butt = document.getElementById( kwd );
         var txt = tinymce.activeEditor.getBody().innerHTML;
-        var indices = searchAll( kwd, txt).sort( function( a, b ){ return a - b } );
+        var indices = searchAll( kwd, txt ).sort( function( a, b ){ return a - b } );
         indices = indices.reverse();
-
+		
         if ( false === hltLock.keyword ){
             for ( i = 0; i < indices.length; i++ ) {
-            var toRep = '<span style="background-color: #FFFF00">' +
-                       txt.slice( indices[i], indices[i] + kwd.length ) +
-                       '</span>';
+            var toRep = '<span style="background-color: #FFFF00"' + 
+                        'class="jeju-highlight">' +
+                        txt.slice( indices[i], indices[i] + kwd.length ) +
+                        '</span>';
+
             txt = txt.indexReplace( toRep, indices[i], indices[i] + kwd.length );
 
             }
@@ -148,11 +153,11 @@ var toggleUsed = { only:false, onlyNon:false };
     function outMouseHighlight( kwd ) {
         var butt = document.getElementById( kwd );
         var txt = tinymce.activeEditor.getBody().innerHTML;
-        
+
         if ( 'blue' === butt.style.color ) {
             unHighlight( txt );
             butt.style.color = 'black';
-            if (true === hltLock.hundred ) {
+            if ( true === hltLock.hundred ) {
             	hltLock.hundred = false;
             	//hltHundred();
             }
