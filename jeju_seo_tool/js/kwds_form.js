@@ -1,6 +1,19 @@
 jQuery(function($) {
 
 (function() {
+    tinymce.PluginManager.add( 'toggle_jeju_button',
+    function( editor, url ) {
+        editor.addButton ( 'toggle_jeju_button', {
+            text: 'Show Jeju Tools',
+            icon: false,
+            onclick: function(){
+                $('#keywords-form').hide()
+            }
+        });
+    });
+ })(); 
+
+(function() {
     tinymce.PluginManager.add( 'keyword_button', 
     function( editor, url ) {
         editor.addButton( 'keyword_button', {

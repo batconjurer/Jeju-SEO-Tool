@@ -90,12 +90,22 @@ function setup_kwd_button_plugin(){
         return;
 	}
 		
+	add_filter('mce_buttons', 'add_toggle_button');
 	add_filter('mce_buttons', 'add_kwd_button');
+	add_filter('mce_external_plugins', 'add_toggle_plugin');
 	add_filter('mce_external_plugins', 'add_kwd_plugin');
 		
 }
 
+function add_toggle_button($buttons) {
+	array_push($buttons, '|', 'toggle_jeju_button');
+	return $buttons;
+}
 
+function add_toggle_plugin($plugin_array){
+	$plugin_array['toggle_jeju_button'] = plugins_url('/js/kwds_form.js',__FILE__);
+	return $plugin_array;
+}
 
 function add_kwd_button($buttons) {
 	array_push($buttons,'|', 'keyword_button');
